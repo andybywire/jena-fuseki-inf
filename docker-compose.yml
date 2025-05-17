@@ -1,0 +1,12 @@
+services:
+  fuseki:
+    build: . # build from current directory using Dockerfile
+    container_name: fuseki-uxm
+    ports:
+      - "3030:3030" # Maps the internal port 3030 in the container to the host machine’s 3030
+    volumes:
+      - fuseki-data:/opt/fuseki/databases # Persists data across container rebuilds or restarts.
+    restart: unless-stopped # restart container if the machine reboots
+
+volumes:
+  fuseki-data:

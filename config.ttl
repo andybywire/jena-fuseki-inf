@@ -1,0 +1,49 @@
+@prefix fuseki: <http://jena.apache.org/fuseki#> .
+@prefix tdb2:   <http://jena.apache.org/2016/tdb#> .
+@prefix ja:     <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix :       <#> .
+
+#################################################################
+# 1 ── Fuseki service
+#################################################################
+[] a fuseki:Server ;
+   fuseki:services ( :service-uxm ) .
+
+:service-uxm  a fuseki:Service ;
+    fuseki:name     "uxm" ;
+    fuseki:dataset  :dataset-uxm-inf ;
+    fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
+                     [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
+                     [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
+                     [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
+
+#################################################################
+# 2 ── On‑disk TDB2 store
+#################################################################
+:store  a tdb2:DatasetTDB2 ;
+        tdb2:location "/opt/fuseki/databases/uxm" ;
+        tdb2:unionDefaultGraph true .
+
+#################################################################
+# 3 ── Graph view of that store
+#################################################################
+:storeGraph  a tdb2:GraphTDB ;
+        tdb2:dataset :store .
+
+#################################################################
+# 4 ── OWL‑RL reasoner wrapped round the graph
+# For plain RDFS closure, which is faster if OWL features aren’t needed, swap the 
+# reasoner URL to http://jena.hpl.hp.com/2003/RDFSReasoner 
+#################################################################
+:infGraph  a ja:InfModel ;
+        ja:baseModel  :storeGraph ;
+        ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLFBRuleReasoner> ] .
+
+#################################################################
+# 5 ── Dataset wrapper served by Fuseki
+# This configuration sets up an unambiguous object chain: Service ➜ Dataset wrapper ➜ 
+# Inference model ➜ TDB2 graph ➜ Disk store.
+#################################################################
+:dataset-uxm-inf  a ja:RDFDataset ;
+        ja:defaultGraph :infGraph .
