@@ -12,4 +12,7 @@ docker-compose build up -d
 
 docker-compose logs -f
 docker-compose down
+
+# remove all volumes and start fresh
+docker volume rm fuseki-uxm_fuseki-data fuseki-uxm_fuseki-config
 ```
