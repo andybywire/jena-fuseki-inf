@@ -10,7 +10,6 @@ services:
     environment:
       - FUSEKI_HOME=/opt/fuseki
       - FUSEKI_BASE=/opt/fuseki
-    user: "1001:1001"  # Updated to match the new UID
 
 volumes:
   fuseki-data:
