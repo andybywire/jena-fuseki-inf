@@ -1,20 +1,8 @@
-# tests for inference support — will return animal and mammal if reasoning is active
-PREFIX ex: <http://example.org/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# tests for inference support — will return 'animal' and 'mammal'
+# in addition to 'dog' if reasoning is active
+PREFIX ex:    <http://example.org/> 
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 
 SELECT ?type WHERE {
   ex:fido rdf:type ?type .
 }
-
-# Test UXM Dataset: Shared Output
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX : <https://uxmethods.org/>
-PREFIX uxmo: <https://uxmethods.org/ontology/>
-SELECT ?origin ?destination (COUNT(?output) AS ?sharedOutputCount)
-        (GROUP_CONCAT(DISTINCT ?output; SEPARATOR=", ") AS ?sharedOutput)
-WHERE {
-    ?origin uxmo:hasOutput ?output.
-    ?destination uxmo:hasInput ?output.
-}
-GROUP BY ?origin ?destination
-ORDER BY DESC(?sharedOutputCount)

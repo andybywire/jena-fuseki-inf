@@ -5,46 +5,68 @@
 @prefix :       <#> .
 
 #################################################################
-# 1 ── Fuseki service
+# Server configuration
 #################################################################
 [] a fuseki:Server ;
-   fuseki:services ( :service-uxm ) ;
-   fuseki:authConfig "shiro.ini" .
+   fuseki:authConfig "shiro.ini" ;
+   fuseki:datasets "/opt/fuseki/databases" ;
+   fuseki:services ( :service-ds ) ;
+   # fuseki:services ( :service-ds :service-ontology ) ;
+   fuseki:datasetDescription "/opt/fuseki/databases" .
 
-:service-uxm  a fuseki:Service ;
-    fuseki:name     "uxm" ;
-    fuseki:dataset  :dataset-uxm-inf ;
+#################################################################
+# Service configuration for default inference-enabled dataset
+#################################################################
+:service-ds  a fuseki:Service ;
+    fuseki:name     "ds" ;
+    fuseki:dataset  :dataset-ds-inf ;
     fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
                      [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
                      [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
                      [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
 
 #################################################################
-# 2 ── On‑disk TDB2 store
+# Dataset configuration for default dataset with inference
 #################################################################
-:store  a tdb2:DatasetTDB2 ;
-        tdb2:location "/opt/fuseki/databases/uxm" ;
+:store-ds  a tdb2:DatasetTDB2 ;
+        tdb2:location "/opt/fuseki/databases/ds" ;
         tdb2:unionDefaultGraph true .
 
-#################################################################
-# 3 ── Graph view of that store
-#################################################################
-:storeGraph  a tdb2:GraphTDB ;
-        tdb2:dataset :store .
+:storeGraph-ds  a tdb2:GraphTDB ;
+        tdb2:dataset :store-ds .
 
-#################################################################
-# 4 ── OWL‑RL reasoner wrapped round the graph
-# For plain RDFS closure, which is faster if OWL features aren’t needed, swap the 
-# reasoner URL to http://jena.hpl.hp.com/2003/RDFSReasoner 
-#################################################################
-:infGraph  a ja:InfModel ;
-        ja:baseModel  :storeGraph ;
+:infGraph-ds  a ja:InfModel ;
+        ja:baseModel  :storeGraph-ds ;
         ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLFBRuleReasoner> ] .
 
+:dataset-ds-inf  a ja:RDFDataset ;
+        ja:defaultGraph :infGraph-ds .
+
 #################################################################
-# 5 ── Dataset wrapper served by Fuseki
-# This configuration sets up an unambiguous object chain: Service ➜ Dataset wrapper ➜ 
-# Inference model ➜ TDB2 graph ➜ Disk store.
+# Service configuration for ontology inference-enabled dataset
+# Use to enable a second dataset
 #################################################################
-:dataset-uxm-inf  a ja:RDFDataset ;
-        ja:defaultGraph :infGraph .
+# :service-ontology  a fuseki:Service ;
+#     fuseki:name     "ontology" ;
+#     fuseki:dataset  :dataset-ontology-inf ;
+#     fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
+#                      [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
+#                      [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
+#                      [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
+
+#################################################################
+# Dataset configuration for ontology dataset with inference
+#################################################################
+#:store-ontology  a tdb2:DatasetTDB2 ;
+#        tdb2:location "/opt/fuseki/databases/ontology" ;
+#        tdb2:unionDefaultGraph true .
+#
+#:storeGraph-ontology  a tdb2:GraphTDB ;
+#        tdb2:dataset :store-ontology .
+#
+#:infGraph-ontology  a ja:InfModel ;
+#        ja:baseModel  :storeGraph-ontology ;
+#        ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLFBRuleReasoner> ] .
+#
+#:dataset-ontology-inf  a ja:RDFDataset ;
+#        ja:defaultGraph :infGraph-ontology .

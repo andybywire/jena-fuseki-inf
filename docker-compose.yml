@@ -5,12 +5,9 @@ services:
     ports:
       - "3030:3030" # Maps the internal port 3030 in the container to the host machine's 3030
     volumes:
-      - fuseki-data:/opt/fuseki/databases # Persists data across container rebuilds or restarts.
+      - ./config.ttl:/opt/fuseki/config.ttl # Mount the config file
+      - ./databases:/opt/fuseki/databases # Mount the local databases directory
     restart: unless-stopped # restart container if the machine reboots
     environment:
       - FUSEKI_HOME=/opt/fuseki
       - FUSEKI_BASE=/opt/fuseki
-
-volumes:
-  fuseki-data:
-    driver: local
