@@ -12,7 +12,6 @@
 # update fuseki:services accordingly.
 #################################################################
 [] a fuseki:Server ;
-   fuseki:authConfig "shiro.ini" ;
    fuseki:datasets "/opt/fuseki/databases" ;
    fuseki:services ( :service-owl :service-rdfs ) ;
    fuseki:datasetDescription "/opt/fuseki/databases" .
