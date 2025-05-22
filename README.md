@@ -39,3 +39,6 @@ to restart it:
 `docker start fuseki`
 
 The docker start command will use all the same volume mounts, port mappings, and other settings that were specified when the container was first created with docker run. You don't need to specify these parameters again.
+
+
+Reasoners: https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html#possible-reasoners

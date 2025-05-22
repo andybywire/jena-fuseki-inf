@@ -2,7 +2,7 @@
 FROM eclipse-temurin:17-jdk
 
 # Define Fuseki version
-ENV FUSEKI_VERSION=5.1.0
+ENV FUSEKI_VERSION=5.4.0
 
 # Install wget and unzip
 RUN apt-get update && apt-get install -y wget unzip && rm -rf /var/lib/apt/lists/*
@@ -21,9 +21,12 @@ RUN wget -q --show-progress https://archive.apache.org/dist/jena/binaries/apache
 # Create a non-root user with a specific UID
 RUN useradd -u 1001 -m -s /bin/bash fuseki
 
-# Create database directory and set permissions
+# Create required directories and set permissions
 RUN mkdir -p /opt/fuseki/databases && \
-    chown -R fuseki:fuseki /opt/fuseki
+    mkdir -p /opt/fuseki/configuration && \
+    chown -R fuseki:fuseki /opt/fuseki && \
+    chmod -R 777 /opt/fuseki/configuration && \
+    chmod -R 777 /opt/fuseki/databases
 
 # Copy config files
 COPY shiro.ini /opt/fuseki/shiro.ini

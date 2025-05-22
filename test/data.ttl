@@ -9,6 +9,9 @@ ex:Mammal a owl:Class ;
     rdfs:subClassOf ex:Animal .
 ex:Dog a owl:Class ;
     rdfs:subClassOf ex:Mammal .
+ex:Cat a owl:Class ;
+    rdfs:subClassOf ex:Mammal .
 
 # Define an individual of a subclass
 ex:fido a ex:Dog .
+ex:poppy a ex:Cat .

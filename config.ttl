@@ -6,67 +6,71 @@
 
 #################################################################
 # Server configuration
+# These dataset are defined statically and can't be removed with 
+# the Fuseki UI. If you want to remove one — or add another - do
+# that in this file. If you add or remove datasets, be sure to 
+# update fuseki:services accordingly.
 #################################################################
 [] a fuseki:Server ;
    fuseki:authConfig "shiro.ini" ;
    fuseki:datasets "/opt/fuseki/databases" ;
-   fuseki:services ( :service-ds ) ;
-   # fuseki:services ( :service-ds :service-ontology ) ;
+   fuseki:services ( :service-owl :service-rdfs ) ;
    fuseki:datasetDescription "/opt/fuseki/databases" .
 
 #################################################################
-# Service configuration for default inference-enabled dataset
+# Service configuration for dataset with OWL Full inference
+# You can change the name of the dataset at the fuseki:name value
 #################################################################
-:service-ds  a fuseki:Service ;
-    fuseki:name     "ds" ;
-    fuseki:dataset  :dataset-ds-inf ;
+:service-owl  a fuseki:Service ;
+    fuseki:name     "ds-owl" ;
+    fuseki:dataset  :dataset-ds-owl ;
     fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
                      [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
                      [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
                      [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
 
 #################################################################
-# Dataset configuration for default dataset with inference
+# Dataset configuration for dataset with OWL Full inference
 #################################################################
-:store-ds  a tdb2:DatasetTDB2 ;
-        tdb2:location "/opt/fuseki/databases/ds" ;
+:store-owl  a tdb2:DatasetTDB2 ;
+        tdb2:location "/opt/fuseki/databases/owl" ;
         tdb2:unionDefaultGraph true .
 
-:storeGraph-ds  a tdb2:GraphTDB ;
-        tdb2:dataset :store-ds .
+:storeGraph-owl  a tdb2:GraphTDB ;
+        tdb2:dataset :store-owl .
 
-:infGraph-ds  a ja:InfModel ;
-        ja:baseModel  :storeGraph-ds ;
+:infGraph-owl  a ja:InfModel ;
+        ja:baseModel  :storeGraph-owl ;
         ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLFBRuleReasoner> ] .
 
-:dataset-ds-inf  a ja:RDFDataset ;
-        ja:defaultGraph :infGraph-ds .
+:dataset-ds-owl  a ja:RDFDataset ;
+        ja:defaultGraph :infGraph-owl .
 
 #################################################################
-# Service configuration for ontology inference-enabled dataset
-# Use to enable a second dataset
+# Service configuration for dataset with RDFS inference
+# You can change the name of the dataset at the fuseki:name value
 #################################################################
-# :service-ontology  a fuseki:Service ;
-#     fuseki:name     "ontology" ;
-#     fuseki:dataset  :dataset-ontology-inf ;
-#     fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
-#                      [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
-#                      [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
-#                      [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
+:service-rdfs  a fuseki:Service ;
+    fuseki:name     "ds-rdfs" ;
+    fuseki:dataset  :dataset-ds-rdfs ;
+    fuseki:endpoint  [ fuseki:operation fuseki:query  ; fuseki:name "sparql" ] ,
+                     [ fuseki:operation fuseki:update ; fuseki:name "update" ] ,
+                     [ fuseki:operation fuseki:gsp-rw ; fuseki:name "data"   ] ,
+                     [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] .
 
 #################################################################
-# Dataset configuration for ontology dataset with inference
+# Dataset configuration for dataset with RDFS inference
 #################################################################
-#:store-ontology  a tdb2:DatasetTDB2 ;
-#        tdb2:location "/opt/fuseki/databases/ontology" ;
-#        tdb2:unionDefaultGraph true .
-#
-#:storeGraph-ontology  a tdb2:GraphTDB ;
-#        tdb2:dataset :store-ontology .
-#
-#:infGraph-ontology  a ja:InfModel ;
-#        ja:baseModel  :storeGraph-ontology ;
-#        ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/OWLFBRuleReasoner> ] .
-#
-#:dataset-ontology-inf  a ja:RDFDataset ;
-#        ja:defaultGraph :infGraph-ontology .
+:store-rdfs  a tdb2:DatasetTDB2 ;
+        tdb2:location "/opt/fuseki/databases/rdfs" ;
+        tdb2:unionDefaultGraph true .
+
+:storeGraph-rdfs  a tdb2:GraphTDB ;
+        tdb2:dataset :store-rdfs .
+
+:infGraph-rdfs  a ja:InfModel ;
+        ja:baseModel  :storeGraph-rdfs ;
+        ja:reasoner   [ ja:reasonerURL <http://jena.hpl.hp.com/2003/RDFSExptRuleReasoner> ] .
+
+:dataset-ds-rdfs  a ja:RDFDataset ;
+        ja:defaultGraph :infGraph-rdfs .
