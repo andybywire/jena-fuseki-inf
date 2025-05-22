@@ -1,8 +1,0 @@
-# tests for inference support — will return 'animal' and 'mammal'
-# in addition to 'dog' if reasoning is active
-PREFIX ex:    <http://example.org/> 
-PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-
-SELECT ?type WHERE {
-  ex:fido rdf:type ?type .
-}
