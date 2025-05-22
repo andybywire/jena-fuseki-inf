@@ -9,7 +9,7 @@ This is a Docker image for running Apache Jena Fuseki 5.4.0 with RDFS and OWL in
   - You can find additional reasoners in the [Fuseki Configuration docs](https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html#possible-reasoners) 
 - Support for persistent dynamic (non-inference) datasets added through the Fuseki UI
 
-Jena 5.4.0 also has experimental support for [triple terms](https://www.w3.org/TR/rdf12-concepts/#section-triple-terms) and [reifying triples](https://www.w3.org/TR/rdf12-turtle/#reifying-triples), which allow us to express edge properties in clean, concise syntax. 
+Jena 5.4.0 also has experimental support for [triple terms](https://www.w3.org/TR/rdf12-concepts/#section-triple-terms) and [reifying triples](https://www.w3.org/TR/rdf12-turtle/#reifying-triples), which allows for the expression of edge properties (statements about relationships) in clean, concise syntax.
 
 
 ## Docker
