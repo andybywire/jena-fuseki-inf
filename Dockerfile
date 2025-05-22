@@ -29,7 +29,10 @@ RUN mkdir -p /opt/fuseki/databases && \
     chmod -R 777 /opt/fuseki/databases
 
 # Copy config files
+COPY shiro.ini /opt/fuseki/shiro.ini
 COPY config.ttl /opt/fuseki/config.ttl
+RUN chmod 644 /opt/fuseki/shiro.ini && \
+    chown fuseki:fuseki /opt/fuseki/shiro.ini
 
 # Expose HTTP port
 EXPOSE 3030
